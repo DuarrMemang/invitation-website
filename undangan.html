@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Undangan</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            height: 300vh;
+            box-sizing: border-box;
+        }
+        section{
+            height: 100vh;
+            padding-bottom: 10px;
+            margin: 0 auto;
+            width: 50%;
+        }
+        .cover>div.container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .invitation>div.container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+        .closing>div.container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .closing>div.container>p{
+            font-size: 50px;
+        }
+        button.darkmode{
+            background-color: black;
+
+        }
+        /* responsive */
+        @media screen and (max-width: 600px){
+            section{
+                width: 100%;
+            }
+        }
+        /* desktop responsive */
+        @media screen and (min-width: 600px){
+            section{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="cover">
+        <button class="darkmode">🌙</button>
+        <div class="container">
+            <h1>Let's Celebrate!</h1>
+            <h4>You are invited to</h4>
+            <h2>Daffaa's 17th Birthday</h2>
+            <h1></h1>
+        </div>
+    </section>
+    <section class="invitation">
+        <div class="container">
+            <p>
+                <h1>📍Hotel Beston</h1>
+                <h1>🕛19:00</h1>
+            </p>
+        </div>
+    </section>
+    <section class="closing">
+        <div class="container">
+            <p>
+                <h1>See You In...</h1>
+            </p>
+            <div class="countdown-container">
+                <div id="timer"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const button = document.querySelector("button");
+        const msg = document.querySelector("body");
+        let clicked = false;
+
+        const savedMode = getCookie("mode");
+        if (savedMode) {
+            setMode(savedMode);
+        }
+
+        button.addEventListener("click", () => {
+            if (!clicked) {
+                setMode("dark");
+            } else {
+                setMode("light");
+            }
+        });
+
+        function setMode(mode) {
+            if (mode === "dark") {
+                document.body.style.backgroundColor = "black";
+                msg.style.color = "white";
+                button.style.backgroundColor = "white";
+                button.innerHTML = "☀️";
+                clicked = true;
+            } else {
+                document.body.style.backgroundColor = "white";
+                msg.style.color = "black";
+                button.style.backgroundColor = "black";
+                button.innerHTML = "🌙";
+                clicked = false;
+            }
+
+            setCookie("mode", mode, 365); 
+        }
+
+        function setCookie(name, value, daysToLive) {
+            const date = new Date();
+            date.setTime(date.getTime() + daysToLive * 24 * 60 * 60 * 1000);
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = `${name}=${value};${expires}; path=/`;
+        }
+
+        function getCookie(name) {
+            const cookieValue = document.cookie.match('(^|[^;]+)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return cookieValue ? cookieValue.pop() : null;
+        }
+
+        function deleteCookie(name) {
+            setCookie(name, null, -1);
+        }
+    </script>
+    <script>
+        // Set the countdown target time (in milliseconds)
+        const countdownTarget = new Date(2024,4,16,7).getTime(); 
+
+        function updateTimer() {
+            // Get the current time
+            const currentTime = new Date().getTime();
+
+            // Calculate the remaining time
+            const remainingTime = countdownTarget - currentTime;
+
+            // Calculate minutes and seconds
+            const months = Math.floor(remainingTime % (1000 * 60 * 60 * 24 * 30 * 12) / (1000 * 60 * 60 * 24 * 30));
+            const days = Math.floor(remainingTime % (1000 * 60 * 60 * 24 * 30) / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+            // Display the countdown
+            document.getElementById('timer').innerHTML = `${months} months ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+
+            // Check if the countdown has reached zero
+            if (remainingTime <= 0) {
+                document.getElementById('timer').innerHTML = 'Countdown expired!';
+                // You can perform any additional actions here when the countdown reaches zero
+            }
+        }
+
+        // Update the timer every second
+        setInterval(updateTimer, 1000);
+
+        // Initial update
+        updateTimer();
+    </script>
+</body>
+</html>
